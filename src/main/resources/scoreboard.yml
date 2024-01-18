@@ -1,0 +1,7 @@
+scoreboard:
+  title: "&aMon Scoreboard"
+  lines:
+    - "&7Ligne 1"
+    - "&eLigne 2"
+    - "&bLigne 3"
+    - "&dLigne 4"

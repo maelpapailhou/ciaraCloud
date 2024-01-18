@@ -1,0 +1,8 @@
+name: CiaraCloud
+version: '${project.version}'
+main: com.ciaracloud.CiaraCloud
+api-version: '1.19'
+commands:
+  afficherscoreboard:
+    description: Show the scoreboard
+    usage: /afficherscoreboard
