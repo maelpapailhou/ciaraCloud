@@ -1,33 +1,38 @@
 package com.ciaracloud;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class CiaraCloud extends JavaPlugin {
+import java.io.File;
+
+public final class CiaraCloud extends JavaPlugin implements Listener {
+
     private ScoreboardManager scoreboardManager;
 
     @Override
     public void onEnable() {
         scoreboardManager = new ScoreboardManager(this);
-        getCommand("afficherscoreboard").setExecutor(this);
+        getServer().getPluginManager().registerEvents(this, this);
         System.out.println("CiaraCloud activé");
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        // Logique de désactivation du plugin
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("afficherscoreboard")) {
-            if (sender instanceof Player) {
-                scoreboardManager.updateScoreboard((Player) sender);
-            }
-            return true;
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (player != null && player.isOnline()) {
+            System.out.println("Player joined: " + player.getName());
+            scoreboardManager.updateScoreboard(player);
         }
-        return false;
     }
 }

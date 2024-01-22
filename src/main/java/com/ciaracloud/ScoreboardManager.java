@@ -12,6 +12,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ScoreboardManager {
 
@@ -43,7 +45,7 @@ public class ScoreboardManager {
 
             int index = 1;
             for (String line : scoreboardConfig.getStringList("lines")) {
-                String formattedLine = ChatColor.translateAlternateColorCodes('&', line);
+                String formattedLine = ChatColor.translateAlternateColorCodes('&', replaceVariables(line));
                 Team team = scoreboard.registerNewTeam("line_" + index);
                 team.addEntry(formattedLine);
                 objective.getScore(formattedLine).setScore(index);
@@ -52,7 +54,45 @@ public class ScoreboardManager {
         }
     }
 
+    private String replaceVariables(String line) {
+        String playerNamePlaceholder = "%player%";
+        String datePlaceholder = "%date%";
+
+        if (line.contains(playerNamePlaceholder)) {
+            // Remplace %player% par le nom du joueur actuel
+            line = line.replace(playerNamePlaceholder, "");
+        }
+
+        if (line.contains(datePlaceholder)) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+            String currentDate = dateFormat.format(new Date());
+            line = line.replace(datePlaceholder, currentDate);
+        }
+
+        return line;
+    }
+
     public void updateScoreboard(Player player) {
+        for (String line : scoreboard.getEntries()) {
+            Team team = scoreboard.getTeam(line);
+            if (team != null) {
+                team.unregister();
+            }
+        }
+
+        int index = 1;
+        ConfigurationSection scoreboardConfig = plugin.getConfig().getConfigurationSection("scoreboard");
+
+        if (scoreboardConfig != null) {
+            for (String line : scoreboardConfig.getStringList("lines")) {
+                String formattedLine = ChatColor.translateAlternateColorCodes('&', replaceVariables(line.replace("%player%", player.getName())));
+                Team team = scoreboard.registerNewTeam("line_" + index);
+                team.addEntry(formattedLine);
+                objective.getScore(formattedLine).setScore(index);
+                index++;
+            }
+        }
+
         player.setScoreboard(scoreboard);
     }
 }

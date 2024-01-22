@@ -1,7 +1,9 @@
 scoreboard:
-  title: "&aMon Scoreboard"
+  title: "Test"
   lines:
-    - "&7Ligne 1"
-    - "&eLigne 2"
-    - "&bLigne 3"
-    - "&dLigne 4"
+    - "&8%date%"
+    - ""
+    - "%player%"
+    - "  Grade: Admin"
+    - "  CiaraCoins: 1 901"
+    - "  Amis connectés: 0"
